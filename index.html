@@ -33,7 +33,7 @@
     <!-- SplashCursor -->
     <script src="splash-cursor.js"></script>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
@@ -44,8 +44,10 @@
     <div class="custom-cursor" id="customCursor">
         <svg class="cursor-triangle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
             <g>
-                <path fill="var(--forest-green)" d="M431.494,336.488l-330-331.977c-4.199-4.499-10.499-5.7-16.199-3.3s-9.3,7.8-9.3,13.801v481.977 c0,6,3.6,11.4,9.3,13.799c5.4,2.401,12.001,1.201,16.199-3.3l145.801-145.499h173.699c6,0,11.4-3.6,13.801-9.3 C437.194,346.989,435.994,340.689,431.494,336.488z"/>
-                <path fill="var(--forest-green)" d="M247.295,361.989L101.494,507.489c-4.199,4.501-10.8,5.7-16.199,3.3 c-5.7-2.399-9.3-7.798-9.3-13.799V15.012c0-6,3.6-11.4,9.3-13.801L247.295,361.989z"/>
+                <path fill="var(--forest-green)"
+                    d="M431.494,336.488l-330-331.977c-4.199-4.499-10.499-5.7-16.199-3.3s-9.3,7.8-9.3,13.801v481.977 c0,6,3.6,11.4,9.3,13.799c5.4,2.401,12.001,1.201,16.199-3.3l145.801-145.499h173.699c6,0,11.4-3.6,13.801-9.3 C437.194,346.989,435.994,340.689,431.494,336.488z" />
+                <path fill="var(--forest-green)"
+                    d="M247.295,361.989L101.494,507.489c-4.199,4.501-10.8,5.7-16.199,3.3 c-5.7-2.399-9.3-7.798-9.3-13.799V15.012c0-6,3.6-11.4,9.3-13.801L247.295,361.989z" />
             </g>
         </svg>
         <span class="cursor-text">view full video</span>
@@ -79,10 +81,13 @@
                                 <img src="Refrence images/Group 4.png" alt="ES Logo"
                                     onerror="this.style.display='none'">
                             </div>
-                            <div style="display: flex; align-items: center;">
-                                <div class="score-box" id="scoreBox">Score <span class="score-number" id="scoreNum">0</span>
+                            <div class="hero-hud">
+                                <div class="score-box" id="scoreBox">
+                                    Score <span class="score-number" id="scoreNum">0</span>
                                 </div>
-                                <div class="lives-box" id="livesBox" style="margin-left: 1.5rem; color: var(--beige); font-family: 'Instrument Serif', serif; font-size: 1.5rem; letter-spacing: 0.05em; display: flex; align-items: center; gap: 5px;">Lives: <span id="livesContainer">❤️❤️❤️</span></div>
+                                <div class="lives-box" id="livesBox">
+                                    Lives: <span id="livesContainer">❤️❤️❤️</span>
+                                </div>
                             </div>
                             <button class="menu-btn" id="menuBtn">Menu</button>
                         </div>
@@ -93,85 +98,87 @@
 
                         <div style="height: 2rem;"></div>
                     </div>
-                    
-
 
                     <div id="level-up-toast" class="level-up-toast">
                         +1 Level <br><span class="speed-up">10% Speed Up</span>
                     </div>
                 </section>
 
-                <!-- ===== STITCHING STRIP (just green rect + dashed line) ===== -->
-                <!-- <div class="stitch-strip" id="stitchStrip">
-                   
-                </div> -->
-
                 <!-- ===== LIGHT SECTION WRAPPER ===== -->
                 <div class="light-section">
 
                     <!-- LOGO SCROLL STRIP -->
                     <section class="marquee-section" aria-label="Our clients">
-
                         <div class="marquee-wrapper" id="logo-marquee">
-
-                            <!-- Track 1 — your actual logos -->
+                            <!-- Track 1 -->
                             <div class="marquee-track">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
+                                <img src="biege logos/IT square logo.png" alt="IT square logo" class="marquee-logo">
+                                <img src="biege logos/Rasa logo.png" alt="Rasa logo" class="marquee-logo">
+                                <img src="biege logos/TWA logo.png" alt="TWA logo" class="marquee-logo">
+                                <img src="biege logos/Tiger IOT logo.png" alt="Tiger IOT logo" class="marquee-logo">
+                                <img src="biege logos/Zz logo.png" alt="Zz logo" class="marquee-logo">
+                                <img src="biege logos/astrahire logo.png" alt="astrahire logo" class="marquee-logo">
+                                <img src="biege logos/autofina logo.png" alt="autofina logo" class="marquee-logo">
+                                <img src="biege logos/candify logo.png" alt="candify logo" class="marquee-logo">
+                                <img src="biege logos/contreat logo.png" alt="contreat logo" class="marquee-logo">
+                                <img src="biege logos/fines vision logo.png" alt="fines vision logo"
+                                    class="marquee-logo">
+                                <img src="biege logos/good feet logo.png" alt="good feet logo" class="marquee-logo">
+                                <img src="biege logos/mumco logo.png" alt="mumco logo" class="marquee-logo">
+                                <img src="biege logos/pishus logo.png" alt="pishus logo" class="marquee-logo">
+                                <img src="biege logos/sarosh logo.png" alt="sarosh logo" class="marquee-logo">
+                                <img src="biege logos/shs logo.png" alt="shs logo" class="marquee-logo">
+                                <img src="biege logos/sindustan logo.png" alt="sindustan logo" class="marquee-logo">
+                                <img src="biege logos/sutra logo.png" alt="sutra logo" class="marquee-logo">
                             </div>
-
-                            <!-- Track 2 — exact pixel-perfect clone of Track 1 -->
+                            <!-- Track 2 — clone for seamless loop -->
                             <div class="marquee-track">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
-                                <img src="biege logos/Group 4.png" alt="Client name" class="marquee-logo">
+                                <img src="biege logos/IT square logo.png" alt="IT square logo" class="marquee-logo">
+                                <img src="biege logos/Rasa logo.png" alt="Rasa logo" class="marquee-logo">
+                                <img src="biege logos/TWA logo.png" alt="TWA logo" class="marquee-logo">
+                                <img src="biege logos/Tiger IOT logo.png" alt="Tiger IOT logo" class="marquee-logo">
+                                <img src="biege logos/Zz logo.png" alt="Zz logo" class="marquee-logo">
+                                <img src="biege logos/astrahire logo.png" alt="astrahire logo" class="marquee-logo">
+                                <img src="biege logos/autofina logo.png" alt="autofina logo" class="marquee-logo">
+                                <img src="biege logos/candify logo.png" alt="candify logo" class="marquee-logo">
+                                <img src="biege logos/contreat logo.png" alt="contreat logo" class="marquee-logo">
+                                <img src="biege logos/fines vision logo.png" alt="fines vision logo"
+                                    class="marquee-logo">
+                                <img src="biege logos/good feet logo.png" alt="good feet logo" class="marquee-logo">
+                                <img src="biege logos/mumco logo.png" alt="mumco logo" class="marquee-logo">
+                                <img src="biege logos/pishus logo.png" alt="pishus logo" class="marquee-logo">
+                                <img src="biege logos/sarosh logo.png" alt="sarosh logo" class="marquee-logo">
+                                <img src="biege logos/shs logo.png" alt="shs logo" class="marquee-logo">
+                                <img src="biege logos/sindustan logo.png" alt="sindustan logo" class="marquee-logo">
+                                <img src="biege logos/sutra logo.png" alt="sutra logo" class="marquee-logo">
                             </div>
-
                         </div>
-
                     </section>
 
                     <!-- ABOUT ME -->
                     <section class="about-section" id="about">
                         <div class="about-text">
                             <h2 class="about-heading">about me</h2>
-                            <!-- SVG underline split into 3 strokes for pencil-draw animation -->
-                            <svg id="about-underline-svg" width="100%" height="230" viewBox="0 0 1516 230"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-
-                                <defs>
-                                    <!-- Single clipPath rect that sweeps left→right to reveal all paths at once -->
-                                    <clipPath id="underline-clip">
-                                        <rect id="underline-clip-rect" x="0" y="-10" width="0" height="250" />
-                                    </clipPath>
-                                </defs>
-
-                                <!-- All three paths clipped by the same sweeping rect — one unified motion -->
-                                <g clip-path="url(#underline-clip)">
-                                    <path id="sig-upper"
-                                        d="M6.34613 100.196C1.20585 102.215 -1.32383 108.02 0.695923 113.16C2.71568 118.3 8.52003 120.83 13.6603 118.81L10.0032 109.503L6.34613 100.196ZM10.0032 109.503L13.6603 118.81C59.2429 100.9 154.521 81.222 280.083 63.8823C405.274 46.5938 559.599 31.7523 722.62 23.2236L722.097 13.2372L721.575 3.25089C558.043 11.8063 403.151 26.6971 277.347 44.0703C151.915 61.3921 54.4226 81.3052 6.34613 100.196L10.0032 109.503ZM722.097 13.2372L722.62 23.2236C894.152 14.2495 1087.73 25.3287 1239.35 40.2441C1315.13 47.699 1380.32 56.1002 1426.9 63.4032C1450.21 67.058 1468.74 70.4197 1481.57 73.2291C1488.02 74.641 1492.82 75.8693 1496 76.8745C1497.62 77.3867 1498.54 77.7557 1498.96 77.9545C1499.17 78.0571 1499.01 78.0021 1498.67 77.7572C1498.5 77.6373 1497.2 76.7331 1496.22 74.8514L1505.09 70.2379L1513.96 65.6245C1512.78 63.3521 1511.07 62.0329 1510.28 61.4745C1509.32 60.7911 1508.35 60.2743 1507.54 59.8925C1505.93 59.1226 1504.01 58.4332 1502.03 57.8053C1497.99 56.5301 1492.51 55.151 1485.85 53.6922C1472.46 50.7603 1453.48 47.3274 1429.99 43.6446C1382.97 36.2722 1317.4 27.8256 1241.31 20.3401C1089.18 5.37496 894.504 -5.79623 721.575 3.25089L722.097 13.2372Z" />
-
-                                    <path id="sig-middle"
-                                        d="M1505.09 70.2379L1496.22 74.8514C1495.62 73.6957 1495.08 71.9906 1495.26 69.9327C1495.44 67.8644 1496.28 66.2514 1497.11 65.1785C1497.89 64.1786 1498.68 63.6209 1499.07 63.3754C1499.48 63.1137 1499.77 63.0008 1499.8 62.9876C1499.84 62.9707 1499.53 63.0923 1498.66 63.2717C1497.84 63.4409 1496.73 63.6187 1495.3 63.7916C1489.46 64.4984 1480.04 64.9154 1467.03 65.031C1441.17 65.2609 1402.66 64.2974 1353.85 62.6077C1256.6 59.2417 1118.01 52.9714 959.924 47.7433L959.593 57.7379L959.262 67.7324C1117.77 72.9745 1255.17 79.2042 1353.16 82.5957C1401.95 84.2848 1440.86 85.2644 1467.21 85.0302C1480.3 84.9138 1490.68 84.497 1497.7 83.6467C1501.03 83.2438 1504.49 82.6515 1507.23 81.5575C1508.43 81.0768 1510.95 79.9524 1512.88 77.4846C1513.98 76.073 1514.97 74.1085 1515.18 71.6757C1515.39 69.2533 1514.77 67.1708 1513.96 65.6245L1505.09 70.2379ZM959.593 57.7379L959.924 47.7433C821.581 43.1682 651.495 61.7235 518.471 84.8507C451.943 96.4171 394.382 109.179 354.478 120.869C334.631 126.684 318.657 132.374 308.066 137.709C302.93 140.296 298.119 143.254 294.881 146.73C293.232 148.501 291.375 151.054 290.616 154.389C289.763 158.132 290.527 161.865 292.598 164.951L300.901 159.378L309.205 153.806C310.107 155.151 310.525 157.035 310.116 158.831C309.8 160.219 309.177 160.726 309.516 160.362C310.256 159.568 312.445 157.897 317.064 155.57C325.984 151.077 340.542 145.793 360.101 140.063C399.011 128.664 455.765 116.053 521.897 104.555C654.191 81.5548 822.799 63.2194 959.262 67.7324L959.593 57.7379Z" />
-
-                                    <path id="sig-bottom"
-                                        d="M1158.34 228.536C1163.2 231.161 1169.27 229.35 1171.89 224.491C1174.52 219.633 1172.71 213.565 1167.85 210.94L1163.09 219.738L1158.34 228.536ZM300.901 159.378L292.598 164.951C294.933 168.43 298.444 170.102 300.786 170.969C303.379 171.927 306.327 172.535 309.325 172.952C315.356 173.792 323.194 174.07 332.342 173.998C350.725 173.852 376.045 172.262 406.333 170.059C467.129 165.637 548.785 158.681 638.313 155.393C727.83 152.105 824.883 152.5 916.196 162.731C1007.63 172.975 1092.59 193.008 1158.34 228.536L1163.09 219.738L1167.85 210.94C1098.85 173.66 1010.99 153.227 918.423 142.855C825.731 132.47 727.585 132.1 637.579 135.406C547.583 138.712 465.391 145.711 404.882 150.112C374.518 152.32 349.823 153.859 332.184 153.998C323.321 154.068 316.646 153.778 312.083 153.143C309.784 152.823 308.416 152.466 307.723 152.21C306.78 151.861 308.038 152.068 309.205 153.806L300.901 159.378Z" />
-                                </g>
-                            </svg>
                             <p class="about-description">
-                                Video Editor and a Motion Graphics Designer with 3+ years of hands on experience with
-                                YouTube channel management, Thumbnail design, Long forms, Short forms.
+                            <p class="about-text">My journey started back in school editing on my phone with PicsArt.
+                                Then one random day
+                                I discovered Adobe Photoshop and that pretty much changed everything.</p>
+
+
+                            <p class="about-text">What started as casually making edits turned into an obsession with
+                                visuals,
+                                storytelling, motion, and content creation. I began with graphic design, but naturally
+                                shifted toward video editing, especially long-form YouTube content where pacing and
+                                storytelling matter more than flashy transitions every two seconds.</p>
+
+                            <p class="about-text"> Over the last 3+ years, I’ve worked with 17+ brands across different
+                                industries,
+                                creating branding, motion design, short-form content, and long-form videos that have
+                                generated 50M+ combined views across platforms.</p>
+
+                            <p class="about-text"> Today, I focus on creating content that feels clean, intentional,
+                                engaging, and
+                                memorable.</p>
                             </p>
                         </div>
                         <div class="about-image-container" id="aboutImageContainer">
@@ -186,11 +193,13 @@
                     <section class="recent-works-section" id="works">
                         <h2 class="recent-works-title">recent works</h2>
                         <div class="carousel-container">
-                            <!-- DZINR Style Cards for Recent Works -->
-                            <div class="carousel-item" style="--card-bg: var(--forest-green); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
+                            <div class="carousel-item"
+                                style="--card-bg: var(--forest-green); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
                                 <a href="https://drive.google.com/" target="_blank" class="dzinr-card-link">
                                     <div class="dzinr-img-container">
-                                        <video src="https://res.cloudinary.com/devodfvpg/video/upload/v1777835519/Digivero_case_study_video_cover_1_qvbpgb.mp4" loop muted playsinline preload="metadata"></video>
+                                        <video
+                                            src="https://res.cloudinary.com/devodfvpg/video/upload/v1777835519/Digivero_case_study_video_cover_1_qvbpgb.mp4"
+                                            loop muted playsinline preload="metadata"></video>
                                     </div>
                                     <div class="dzinr-content">
                                         <div class="dzinr-tags">
@@ -201,17 +210,24 @@
                                         <div class="dzinr-title-row">
                                             <h3 class="dzinr-title">Brand intro video</h3>
                                             <div class="dzinr-icon-circle">
-                                                <svg viewBox="0 0 24 24"><path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                <svg viewBox="0 0 24 24">
+                                                    <path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
 
-                            <div class="carousel-item" style="--card-bg: var(--dark-void); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
+                            <div class="carousel-item"
+                                style="--card-bg: var(--dark-void); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
                                 <a href="https://drive.google.com/" target="_blank" class="dzinr-card-link">
                                     <div class="dzinr-img-container">
-                                        <video src="https://res.cloudinary.com/devodfvpg/video/upload/v1777835546/Chel_vid_1_iyeix3.mp4" loop muted playsinline preload="metadata"></video>
+                                        <video
+                                            src="https://res.cloudinary.com/devodfvpg/video/upload/v1777835546/Chel_vid_1_iyeix3.mp4"
+                                            loop muted playsinline preload="metadata"></video>
                                     </div>
                                     <div class="dzinr-content">
                                         <div class="dzinr-tags">
@@ -222,17 +238,24 @@
                                         <div class="dzinr-title-row">
                                             <h3 class="dzinr-title">AI Documentary</h3>
                                             <div class="dzinr-icon-circle">
-                                                <svg viewBox="0 0 24 24"><path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                <svg viewBox="0 0 24 24">
+                                                    <path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
 
-                            <div class="carousel-item" style="--card-bg: var(--forest-green); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
+                            <div class="carousel-item"
+                                style="--card-bg: var(--forest-green); --card-text: var(--beige); --card-accent: var(--gold); --icon-color: var(--dark-void);">
                                 <a href="https://drive.google.com/" target="_blank" class="dzinr-card-link">
                                     <div class="dzinr-img-container">
-                                        <video src="https://res.cloudinary.com/devodfvpg/video/upload/v1777836048/TigerIOT_cover_video_1_ywkz21.mp4" loop muted playsinline preload="metadata"></video>
+                                        <video
+                                            src="https://res.cloudinary.com/devodfvpg/video/upload/v1777836048/TigerIOT_cover_video_1_ywkz21.mp4"
+                                            loop muted playsinline preload="metadata"></video>
                                     </div>
                                     <div class="dzinr-content">
                                         <div class="dzinr-tags">
@@ -243,7 +266,11 @@
                                         <div class="dzinr-title-row">
                                             <h3 class="dzinr-title">TigerIOT Event</h3>
                                             <div class="dzinr-icon-circle">
-                                                <svg viewBox="0 0 24 24"><path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                <svg viewBox="0 0 24 24">
+                                                    <path d="M5 19L19 5M19 5V19M19 5H5" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
                                             </div>
                                         </div>
                                     </div>
@@ -252,39 +279,27 @@
                         </div>
                     </section>
 
-                    <!-- ===== SERVICES GRID SECTION ===== -->
-                    <section class="services-grid-section" id="services">
-                        <div class="services-grid-container">
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v2a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h8a2 2 0 012 2v2z"/></svg>
+                    <!-- ===== SERVICES SCROLL TRACK ===== -->
+                    <!-- <section class="services-scroll-section" id="services">
+                        <div class="services-sticky-container">
+                            <div class="services-cards-track">
+                                <div class="service-card">
+                                    <img src="/svg/s01.svg" alt="Logo Design" class="service-card-image">
+
+                                    <div class="service-card-content">
+                                        <h3 class="service-card-title">
+                                            Logo <br class="desktop-break"> Design
+                                        </h3>
+
+                                        <p class="service-card-description">
+                                            We make logos that feel right. Not just good-looking but meaningful,
+                                            memorable and built to last for your brand.
+                                        </p>
+                                    </div>
                                 </div>
-                                <h3 class="service-title">Video Editing</h3>
-                                <p class="service-desc">Long form & short form video editing that feels right. Not just good-looking but meaningful, memorable and built to last.</p>
-                            </div>
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                </div>
-                                <h3 class="service-title">Motion Graphics</h3>
-                                <p class="service-desc">Motion graphics that tell a story before anyone reads a word. We design animations that stand out and connect.</p>
-                            </div>
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                </div>
-                                <h3 class="service-title">Thumbnail Design</h3>
-                                <p class="service-desc">A video is more than just content. We help you show up the same way everywhere with high-converting thumbnails.</p>
-                            </div>
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                                </div>
-                                <h3 class="service-title">Channel Management</h3>
-                                <p class="service-desc">Your channel should work hard and look good. We manage YouTube channels that are easy to use and built to grow with you.</p>
                             </div>
                         </div>
-                    </section>
+                    </section> -->
 
 
 
@@ -319,26 +334,15 @@
                 <div class="curved-marquee-wrapper" id="curved-marquee">
                     <div class="curved-marquee-sticky">
                         <svg viewBox="0 0 1600 400" preserveAspectRatio="xMidYMid slice" class="curved-marquee-svg">
-                            <!-- 1. Solid background block covering the area below the curve -->
                             <path d="M -100 200 C 500 0, 1100 400, 1700 200 L 1700 500 L -100 500 Z"
                                 fill="var(--beige)" />
-
-                            <!-- 2. The solid curved band -->
                             <path d="M -100 200 C 500 0, 1100 400, 1700 200" fill="none" stroke="var(--forest-green)"
                                 stroke-width="140" />
-
-                            <!-- 3. Top dashed border -->
                             <path d="M -100 130 C 500 -70, 1100 330, 1700 130" fill="none" stroke="var(--beige)"
                                 stroke-width="2" stroke-dasharray="15,15" />
-
-                            <!-- 4. Bottom dashed border -->
                             <path d="M -100 270 C 500 70, 1100 470, 1700 270" fill="none" stroke="var(--beige)"
                                 stroke-width="2" stroke-dasharray="15,15" />
-
-                            <!-- 5. Invisible path exactly in the center for the text to follow -->
                             <path id="curved-text-path-line" d="M -100 200 C 500 0, 1100 400, 1700 200" fill="none" />
-
-                            <!-- 6. The Marquee Text -->
                             <text font-family="'Instrument Serif', serif" font-size="85" fill="var(--beige)"
                                 dominant-baseline="central" letter-spacing="1">
                                 <textPath href="#curved-text-path-line" startOffset="0%" id="curved-marquee-text">
@@ -365,23 +369,15 @@
                     style="pointer-events: auto; background-color: rgba(0,0,0,0.001);"></div>
             </div>
         </div>
-        <div class="footer-brand-container">
-            <div class="footer-name-text" id="footerNameText">
-                <span class="footer-letter">e</span>
-                <span class="footer-letter">h</span>
-                <span class="footer-letter">t</span>
-                <span class="footer-letter">i</span>
-                <span class="footer-letter">s</span>
-                <span class="footer-letter">h</span>
-                <span class="footer-letter">a</span>
-                <span class="footer-letter">a</span>
-                <span class="footer-letter">m</span>
-            </div>
+        <div class="footer-bottom-bar">
+            <span class="footer-bar-logo">es.</span>
+            <span class="footer-bar-message" id="footerScrollMsg">thanks for scrolling 0 banana lengths</span>
+            <a href="#hero" class="footer-bar-top" id="footerTopBtn">top ▲</a>
         </div>
     </footer>
 
     <script src="justhero.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 
 </html>

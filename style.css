@@ -3,7 +3,8 @@
     --gold: #dcb558;
     --beige: #efe7d8;
     --dark-void: #030604;
-    --content-margin: clamp(2rem, 5vw, 6rem);
+    --content-margin: clamp(1.5rem, 5vw, 7rem);
+    --max-width: 1320px;
 }
 
 * {
@@ -16,15 +17,29 @@ body,
 html {
     width: 100%;
     background-color: var(--dark-void);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     color: var(--beige);
     cursor: none;
     overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
+/* Preserve no-select only where dragging/swiping is used */
+.carousel-container,
+#viewport,
+#track,
+.testimonial-track,
+#logo-marquee,
+.stitch-strip,
+.services-track {
     user-select: none;
     -webkit-user-select: none;
 }
 
-/* Hide default cursor on all clickable elements */
+/* === HIDE NATIVE CURSOR EVERYWHERE INTERACTIVE === */
+*,
 a,
 button,
 [onclick],
@@ -32,8 +47,20 @@ input,
 select,
 textarea,
 [role="button"],
+[draggable],
+.video-card,
+#viewport,
+#track,
+.carousel-container,
+.carousel-item,
 .testimonial-card,
-.nav-close-btn {
+.testimonial-track,
+#globe-container,
+.globe-link,
+.nav-close-btn,
+.menu-btn,
+.services-track,
+.services-item {
     cursor: none !important;
 }
 
@@ -85,6 +112,12 @@ html.lenis {
     -webkit-mask-image: radial-gradient(ellipse at center, transparent 45%, black 100%);
 }
 
+/* ===== SCROLL CONTENT — footer reveal spacer ===== */
+#smooth-content {
+    position: relative;
+    z-index: 2;
+}
+
 /* ===== MAIN WRAPPER ===== */
 main {
     position: relative;
@@ -101,44 +134,13 @@ main {
     background: var(--dark-void);
 }
 
-.hero-section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 35vh;
-    background: linear-gradient(to bottom, rgba(3, 6, 4, 0) 0%, var(--dark-void) 100%);
-    z-index: 2;
-    pointer-events: none;
-}
-
-/* Peripheral vision blur — left and right edges */
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    pointer-events: none;
-    background:
-        linear-gradient(to right,
-            rgba(3, 6, 4, 0.6) 0%,
-            transparent 12%,
-            transparent 88%,
-            rgba(3, 6, 4, 0.6) 100%);
-    /* Using mask to create the blur zone */
-}
-
-/* Peripheral blur overlay elements */
+/* Peripheral vision blur â€” left and right edges */
 .hero-peripheral-left,
 .hero-peripheral-right {
     position: absolute;
     top: 0;
     height: 100%;
-    width: 12vw;
+    width: 10vw;
     z-index: 3;
     pointer-events: none;
 }
@@ -161,11 +163,6 @@ main {
     -webkit-mask-image: linear-gradient(to left, black 0%, transparent 100%);
 }
 
-.hero-section::before,
-.hero-section::after {
-    content: none;
-}
-
 #hero-webgl {
     position: absolute;
     inset: 0;
@@ -175,16 +172,14 @@ main {
 body.nav-open #hero-webgl,
 body.nav-open .hero-ui,
 body.nav-open .tv-overlay,
-body.nav-open .chromatic-aberration,
-body.nav-open .hero-section::after {
+body.nav-open .chromatic-aberration {
     width: 65vw;
 }
 
 #hero-webgl,
 .hero-ui,
 .tv-overlay,
-.chromatic-aberration,
-.hero-section::after {
+.chromatic-aberration {
     transition: width 0.6s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
@@ -218,7 +213,7 @@ body.nav-open .hero-section::after {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.85rem;
     color: var(--beige);
     letter-spacing: 1px;
@@ -231,23 +226,43 @@ body.nav-open .hero-section::after {
     font-style: italic;
 }
 
+/* ===== HERO HUD â€” Score + Lives grouped ===== */
+.hero-hud {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.lives-box {
+    color: var(--beige);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .menu-btn {
     pointer-events: auto;
     cursor: none;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.75rem;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--beige);
     background: none;
-    border: none;
-    transition: color 0.3s, opacity 0.4s;
+    border: 1px solid rgba(239, 231, 216, 0.2);
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    transition: color 0.3s, border-color 0.3s, opacity 0.4s;
     z-index: 1001;
     position: relative;
 }
 
 .menu-btn:hover {
     color: var(--gold);
+    border-color: rgba(220, 181, 88, 0.5);
 }
 
 /* ===== HERO CENTER (Name) ===== */
@@ -260,7 +275,7 @@ body.nav-open .hero-section::after {
 }
 
 .hero-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: clamp(5rem, 10vw, 10rem);
     font-weight: 400;
     line-height: 0.95;
@@ -290,15 +305,15 @@ body.nav-open .hero-section::after {
     z-index: 100;
     pointer-events: none;
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 4px;
     padding: 10px 20px;
     background: rgba(220, 181, 88, 0.08);
     border-left: 3px solid var(--gold);
     border-radius: 0 6px 6px 0;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--gold);
@@ -310,7 +325,7 @@ body.nav-open .hero-section::after {
     font-size: 0.7rem;
     font-weight: 400;
     color: rgba(239, 231, 216, 0.7);
-    margin-left: 4px;
+    letter-spacing: 1px;
 }
 
 /* ===== RESPONSIVE NAVBAR ===== */
@@ -336,17 +351,15 @@ body.nav-open .hero-section::after {
     transform: translateX(0);
 }
 
-/* When nav is open, the hero content should shift left to make room */
 body.nav-open .hero-ui {
     transform: translateX(0);
-    /* Game stays playable */
 }
 
 .nav-close-btn {
     position: absolute;
     top: 2rem;
     right: var(--content-margin);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.75rem;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -371,7 +384,7 @@ body.nav-open .hero-ui {
 }
 
 .nav-links a {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: clamp(1.8rem, 3vw, 2.8rem);
     font-style: italic;
     color: var(--forest-green);
@@ -397,7 +410,6 @@ body.nav-open .hero-ui {
 }
 
 /* ===== STITCHING STRIP ===== */
-/* Just a dark green rectangle with a single beige dashed line in the middle */
 .stitch-strip {
     width: 100vw;
     height: 28px;
@@ -415,16 +427,10 @@ body.nav-open .hero-ui {
     top: 50%;
     left: 0;
     width: 200%;
-    /* Changed from 200% unless you have a specific animation reason */
     height: 2px;
-    /* This acts as your "border thickness" */
-
-    /* The Magic Part: */
     background-image: linear-gradient(to right, rgba(239, 231, 216, 1) 50%, transparent 50%);
     background-size: 40px 100%;
-    /* Increase 20px to increase the dash + space length */
     background-repeat: repeat-x;
-
     transform: translateY(-50%);
 }
 
@@ -439,23 +445,20 @@ body.nav-open .hero-ui {
 /* ===== LOGO SCROLL STRIP ===== */
 .marquee-section {
     width: 100%;
-    padding: 1.5rem 0;
+    padding: 1rem 0;
     background-color: var(--forest-green);
     overflow: hidden;
     position: relative;
     background-image:
-        repeating-linear-gradient(to right, var(--beige) 0, var(--beige) 15px, transparent 15px, transparent 30px),
-        repeating-linear-gradient(to right, var(--beige) 0, var(--beige) 15px, transparent 15px, transparent 30px);
-    background-size: 100% 2px;
-    background-position: top, bottom;
+        repeating-linear-gradient(to right, var(--beige) 0, var(--beige) 10px, transparent 10px, transparent 24px),
+        repeating-linear-gradient(to right, var(--beige) 0, var(--beige) 10px, transparent 10px, transparent 24px);
+    background-size: 200% 2px;
+    background-position: left 4px top 4px, left bottom 4px;
     background-repeat: no-repeat;
 }
 
-/* Fade edges removed as requested */
-
 .marquee-wrapper {
     display: flex;
-    /* row of two identical tracks */
     width: max-content;
     will-change: transform;
     animation: marquee var(--marquee-speed, 22s) linear infinite;
@@ -464,27 +467,21 @@ body.nav-open .hero-ui {
 .marquee-track {
     display: flex;
     align-items: center;
-    gap: 8rem;
+    gap: 6rem;
     flex-shrink: 0;
     padding-right: 8rem;
-    /* must equal gap — closes the seam between track1 and track2 */
 }
 
 .marquee-logo {
-    height: 35px;
+    height: 60px;
     width: auto;
-    opacity: 0.4;
+    opacity: 1;
     transition: opacity 0.35s ease;
     pointer-events: auto;
     -webkit-user-drag: none;
     user-select: none;
 }
 
-.marquee-logo:hover {
-    opacity: 0.9;
-}
-
-/* The magic: slide exactly one track width (= half the wrapper) then reset */
 @keyframes marquee {
     0% {
         transform: translateX(0);
@@ -495,7 +492,6 @@ body.nav-open .hero-ui {
     }
 }
 
-/* Respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
     .marquee-wrapper {
         animation: none;
@@ -507,8 +503,8 @@ body.nav-open .hero-ui {
     padding: 8rem var(--content-margin);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    max-width: 1400px;
+    gap: 6rem;
+    max-width: var(--max-width);
     margin: 0 auto;
     align-items: center;
 }
@@ -519,52 +515,35 @@ body.nav-open .hero-ui {
 
 .about-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(3.13rem, calc(1.829rem + 6.481vw), 7.50rem);
-    color: var(--dark-void);
+    text-transform: capitalize;
+    font-size: clamp(3.5rem, 6vw, 5rem);
+    color: var(--forest-green);
     font-weight: 400;
-    margin-bottom: 0.5rem;
-    line-height: 1;
-}
-
-.about-underline {
-    width: 300px;
-    height: auto;
-    margin: 0 20px 0 40px;
-    margin-bottom: 2rem;
-    display: block;
-    filter: brightness(0.3) sepia(1) saturate(3) hue-rotate(120deg);
-    opacity: 0.5;
-}
-
-.about-description {
-    font-size: clamp(1.00rem, calc(0.852rem + 0.741vw), 1.50rem);
-    line-height: 1.8;
-    color: rgba(3, 6, 4, 0.7);
-    /* max-width: 420px; */
-    font-weight: 300;
-}
-
-#about-underline-svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    overflow: visible;
+    font-style: normal;
     margin-bottom: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
 }
 
-#sig-upper,
-#sig-middle,
-#sig-bottom {
-    fill: var(--forest-green);
-    stroke: none;
-    opacity: 0.9;
+.about-description {}
+
+.about-text {
+    font-size: clamp(1.00rem, calc(0.852rem + 0.741vw), 1.05rem);
+    line-height: 1.65;
+    color: rgba(3, 6, 4, 0.65);
+    font-weight: 300;
+    margin-bottom: 1rem;
+}
+
+.about-description:last-child {
+    margin-bottom: 0;
 }
 
 /* About Image Container with parallax hover */
 .about-image-container {
     position: relative;
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
     aspect-ratio: 3/4;
     border-radius: 16px;
     overflow: hidden;
@@ -604,12 +583,14 @@ body.nav-open .hero-ui {
 
 .recent-works-title {
     font-family: 'Instrument Serif', serif;
+    text-transform: capitalize;
     font-size: clamp(3.5rem, 6vw, 5rem);
     color: var(--forest-green);
     font-weight: 400;
+    font-style: normal;
     margin: 0 auto 1.5rem auto;
     width: 100%;
-    max-width: 1400px;
+    max-width: var(--max-width);
     padding: 0 var(--content-margin);
     line-height: 1;
     letter-spacing: -0.02em;
@@ -619,7 +600,7 @@ body.nav-open .hero-ui {
 .carousel-container {
     display: flex;
     gap: 2.5rem;
-    padding-left: max(var(--content-margin), calc((100vw - 1400px) / 2 + var(--content-margin)));
+    padding-left: max(var(--content-margin), calc((100vw - var(--max-width)) / 2 + var(--content-margin)));
     padding-right: var(--content-margin);
     width: max-content;
     padding-bottom: 2rem;
@@ -631,7 +612,7 @@ body.nav-open .hero-ui {
 }
 
 .carousel-container:active {
-    cursor: grabbing;
+    cursor: none !important;
 }
 
 .carousel-item {
@@ -688,10 +669,10 @@ body.nav-open .hero-ui {
 .dzinr-content {
     background-color: var(--card-bg, #fff);
     color: var(--card-text, #333);
-    padding: 2.5rem 3rem;
+    padding: 2rem 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     flex-shrink: 0;
 }
 
@@ -699,11 +680,11 @@ body.nav-open .hero-ui {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     padding-bottom: 1rem;
     position: relative;
 }
@@ -716,18 +697,18 @@ body.nav-open .hero-ui {
     width: 100%;
     height: 1px;
     background-color: currentColor;
-    opacity: 0.2;
+    opacity: 0.15;
 }
 
 .dzinr-tag-pill {
     border: 1px solid currentColor;
     padding: 0.25rem 1rem;
     border-radius: 20px;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .dzinr-tags span:not(.dzinr-tag-pill) {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .dzinr-title-row {
@@ -737,18 +718,18 @@ body.nav-open .hero-ui {
 }
 
 .dzinr-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3.5rem);
     font-weight: 700;
     margin: 0;
     text-transform: uppercase;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
 }
 
 .dzinr-icon-circle {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     border: 1px solid var(--card-text);
     background-color: transparent;
@@ -761,8 +742,8 @@ body.nav-open .hero-ui {
 }
 
 .dzinr-icon-circle svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     fill: none;
     transition: transform 0.3s ease;
     transform: rotate(-45deg);
@@ -788,13 +769,11 @@ body.nav-open .hero-ui {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 24px;
     height: 24px;
     padding: 0;
     background-color: transparent;
     border-radius: 0;
-
     transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
         height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
         background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
@@ -841,7 +820,7 @@ body.show-triangle .custom-cursor {
 .custom-cursor .cursor-text {
     opacity: 0;
     color: var(--beige);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -855,88 +834,157 @@ body.show-triangle .custom-cursor {
     transition-delay: 0.15s;
 }
 
-/* ===== SERVICES GRID SECTION ===== */
-.services-grid-section {
+/* ===== SERVICES SCROLL TRACK ===== */
+.services-scroll-section {
     width: 100vw;
+    height: 100vh;
     background-color: var(--beige);
-    padding: 8rem 0;
+    position: relative;
     border-top: 1px solid rgba(3, 6, 4, 0.05);
     border-bottom: 1px solid rgba(3, 6, 4, 0.05);
+    overflow: hidden;
 }
 
-.services-grid-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 var(--content-margin);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+.services-sticky-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
     align-items: center;
 }
 
+.services-cards-track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    padding: 0 10vw;
+    align-items: center;
+    will-change: transform;
+}
+
 .service-card {
-    background-color: var(--forest-green);
-    border: 1px solid rgba(3, 6, 4, 0.08);
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 400px;
+
+    padding: 20px;
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(6px);
+
+    text-decoration: none;
+    color: inherit;
+
+    transition:
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        background 0.3s ease;
 }
 
 .service-card:hover {
-    border-color: var(--gold);
+    border-color: #ffffff;
+    transform: translateY(-4px);
 }
 
-.service-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 0.5rem;
+.service-card-image {
+    width: fit-content;
+    height: 100px;
+
+    object-fit: cover;
+    pointer-events: none;
+
+    z-index: 10;
+
+    margin-top: 0;
 }
 
-.service-icon svg {
+.service-card-content {
     width: 100%;
-    height: 100%;
-    fill: currentColor;
-    stroke: currentColor;
-    color: var(--gold);
+    margin-top: 48px;
+    margin-bottom: 16px;
+
+    z-index: 10;
 }
 
-.service-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
+.service-card-title {
+    padding: 8px 0;
+
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     font-weight: 500;
-    color: var(--beige);
-    line-height: 1.2;
+
+    margin: 0;
 }
 
-.service-desc {
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    color: rgba(239, 231, 216, 0.6);
+.service-card-description {
+    margin: 0;
+
+    opacity: 0.5;
+
+    font-size: 16px;
     line-height: 1.6;
 }
 
-@media (max-width: 1024px) {
-    .services-grid-container {
-        grid-template-columns: repeat(2, 1fr);
+/* hidden by default */
+.desktop-break {
+    display: none;
+}
+
+/* lg breakpoint equivalent */
+@media (min-width: 1024px) {
+    .service-card-image {
+        margin-top: 24px;
     }
 
-    .service-card {
-        transform: none !important;
-        /* Disable vertical stagger on smaller screens */
+    .desktop-break {
+        display: block;
+    }
+
+    .service-card-content {
+        margin-bottom: 16px;
     }
 }
 
-@media (max-width: 600px) {
-    .services-grid-container {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    .services-scroll-section {
+        height: auto;
+        padding: 5rem 0;
+    }
+
+    .services-sticky-container {
+        position: relative;
+        height: auto;
+        overflow: visible;
+        display: block;
+    }
+
+    .services-cards-track {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 var(--content-margin);
+        transform: none !important;
+    }
+
+    .service-card {
+        width: 100%;
+        min-width: unset;
+        max-width: 500px;
+        margin: 0 auto;
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
 
 .service-text {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: clamp(3rem, 6vw, 6rem);
     color: var(--forest-green);
     font-weight: 400;
@@ -947,7 +995,7 @@ body.show-triangle .custom-cursor {
 }
 
 .service-icon-star {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     color: var(--forest-green);
     display: flex;
@@ -955,7 +1003,7 @@ body.show-triangle .custom-cursor {
     justify-content: center;
 }
 
-/* ===== STITCHING STRIP BOTTOM (between works and gallery) ===== */
+/* ===== STITCHING STRIP BOTTOM ===== */
 .stitch-strip-bottom {
     width: 100vw;
     height: 28px;
@@ -997,12 +1045,12 @@ body.show-triangle .custom-cursor {
     height: 600px;
     transform: translateY(-50%);
     perspective: 1500px;
-    cursor: grab;
+    cursor: none !important;
     z-index: 1;
 }
 
 .carousel-viewport:active {
-    cursor: grabbing;
+    cursor: none !important;
 }
 
 .carousel-track {
@@ -1043,15 +1091,17 @@ body.show-triangle .custom-cursor {
 .v-scroll-title {
     position: relative;
     top: 0;
-    padding: 6vh 0 4vh 0;
+    padding: 4vh 0 6vh 0;
     width: 100%;
     text-align: center;
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 5vw, 5rem);
-    font-style: italic;
+    font-size: clamp(3.5rem, 6vw, 5rem);
+    font-style: normal;
+    font-weight: 400;
     color: var(--beige);
     z-index: 10;
     pointer-events: none;
+    letter-spacing: -0.02em;
 }
 
 .instructions {
@@ -1061,7 +1111,8 @@ body.show-triangle .custom-cursor {
     transform: translateX(-50%);
     text-align: center;
     opacity: 0.3;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
+    text-transform: capitalize;
     font-size: 0.6rem;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -1072,6 +1123,7 @@ body.show-triangle .custom-cursor {
 
 /* ===== TESTIMONIALS ===== */
 .testimonial-section {
+
     width: 100vw;
     padding: 6rem 0;
     background-color: var(--dark-void);
@@ -1081,16 +1133,17 @@ body.show-triangle .custom-cursor {
     align-items: center;
     position: relative;
     z-index: 5;
-    /* Needs to be above the background but below the sticky footer */
 }
 
 .testimonial-title {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(3.5rem, 5.5vw, 5.5rem);
+    text-transform: capitalize;
+    font-size: clamp(3.5rem, 6vw, 5rem);
     font-weight: 400;
-    margin-bottom: 5rem;
+    font-style: normal;
+    margin-bottom: 4rem;
     text-align: center;
-    letter-spacing: 2px;
+    letter-spacing: -0.02em;
     color: var(--beige);
 }
 
@@ -1117,10 +1170,9 @@ body.show-triangle .custom-cursor {
 
 .testimonial-card {
     background-color: var(--beige);
-    border-radius: 10px;
-    padding: 1rem 2rem;
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
     width: 520px;
-    height: 250px;
     min-width: 520px;
     margin: 0 -20px;
     color: #2D2D2D;
@@ -1148,23 +1200,31 @@ body.show-triangle .custom-cursor {
     border-radius: 50%;
     background-color: #ccc;
     object-fit: cover;
-    border: 2px solid #fff;
+    border: 2px solid rgba(32, 73, 55, 0.2);
 }
 
 .testimonial-user-info h3 {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    color: #6C8B5B;
-    font-size: 1.6rem;
+    font-family: 'Instrument Sans', sans-serif;
+    color: var(--forest-green);
+    font-size: 1.4rem;
     font-weight: 500;
     letter-spacing: -0.5px;
 }
 
 .testimonial-text {
-    font-size: 1.05rem;
-    line-height: 1.2;
-    color: #2D2D2D;
-    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    color: rgba(3, 6, 4, 0.7);
+    font-weight: 300;
+}
+
+.testimonial-footer {
+    font-style: italic;
+    font-weight: 700;
+    font-size: small;
+    opacity: 0.8;
 }
 
 @media (max-width: 768px) {
@@ -1179,7 +1239,7 @@ body.show-triangle .custom-cursor {
     }
 
     .testimonial-text {
-        font-size: 0.7rem;
+        font-size: 0.85rem;
     }
 }
 
@@ -1190,6 +1250,7 @@ body.show-triangle .custom-cursor {
     background-color: var(--dark-void);
     position: relative;
     z-index: 5;
+    pointer-events: none;
 }
 
 .curved-marquee-sticky {
@@ -1200,6 +1261,7 @@ body.show-triangle .custom-cursor {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    pointer-events: none;
 }
 
 .curved-marquee-top-fill {
@@ -1214,7 +1276,6 @@ body.show-triangle .custom-cursor {
     background-color: var(--beige);
     width: 100%;
     margin-top: -2px;
-    /* Fix subpixel rendering gap */
 }
 
 .curved-marquee-svg {
@@ -1229,7 +1290,7 @@ body.show-triangle .custom-cursor {
 footer {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     z-index: 1;
     background-color: var(--beige);
     display: flex;
@@ -1237,7 +1298,7 @@ footer {
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    padding-top: 10vh;
+    padding-top: 8rem;
 }
 
 #footer-webgl {
@@ -1253,7 +1314,7 @@ footer {
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--max-width);
     padding: 0 var(--content-margin);
     display: flex;
     justify-content: space-between;
@@ -1262,35 +1323,51 @@ footer {
     flex-grow: 1;
 }
 
-.footer-brand-container {
-    width: 100vw;
+.footer-bottom-bar {
+    width: calc(100% - 2rem);
+    margin: 0 1rem;
+    background-color: var(--forest-green);
+    color: var(--beige);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2.5rem;
     position: relative;
     z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    margin-bottom: -4vw;
-    pointer-events: none;
-    overflow: hidden;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 30px rgba(32, 73, 55, 0.25);
 }
 
-.footer-name-text {
+.footer-bar-logo {
     font-family: 'Instrument Serif', serif;
-    font-size: 26vw;
-    color: var(--dark-void);
-    line-height: 0.8;
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    letter-spacing: -0.02em;
-    padding-top: 5vw;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--beige);
+    letter-spacing: 0.02em;
 }
 
-.footer-letter {
-    display: inline-block;
-    transform: translateY(120%);
-    opacity: 0;
-    will-change: transform, opacity;
+.footer-bar-message {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--beige);
+    opacity: 0.85;
+    letter-spacing: 0.03em;
+}
+
+.footer-bar-top {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--beige);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s;
+    pointer-events: auto;
+}
+
+.footer-bar-top:hover {
+    opacity: 0.7;
 }
 
 .footer-left {
@@ -1299,6 +1376,7 @@ footer {
 
 .footer-large-text {
     font-family: 'Instrument Serif', serif;
+    text-transform: capitalize;
     font-size: clamp(4rem, 8vw, 8rem);
     color: var(--dark-void);
     line-height: 0.9;
@@ -1322,7 +1400,7 @@ footer {
 }
 
 .footer-social-link {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     text-decoration: none;
     color: var(--dark-void);
     transition: color 0.3s;
@@ -1373,7 +1451,7 @@ footer {
 }
 
 .globe-content h2 {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: clamp(3rem, 5vw, 5rem);
     font-style: italic;
     color: var(--gold);
@@ -1390,10 +1468,10 @@ footer {
 
 .globe-container {
     position: relative;
-    width: 550px;
-    height: 550px;
+    width: 500px;
+    height: 500px;
     perspective: 1200px;
-    cursor: grab;
+    cursor: none !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1403,13 +1481,13 @@ footer {
 }
 
 .globe-container:active {
-    cursor: grabbing;
+    cursor: none !important;
 }
 
 .globe-word {
     position: absolute;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--beige);
     white-space: nowrap;

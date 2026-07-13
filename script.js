@@ -194,20 +194,39 @@ let cursorLastX = cursorMouseX;
 let cursorLastY = cursorMouseY;
 let cursorBank = 0;
 
-const greenBgSelectors = [
-    '.marquee-section',
-    '.stitch-strip',
-    '.carousel-item[style*="--card-bg: var(--forest-green)"]'
-];
+// === SMART BLEND MODE ===
+(function () {
+    function getEffectiveBg(el) {
+        while (el && el !== document.documentElement) {
+            const bg = window.getComputedStyle(el).backgroundColor;
+            if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+                const m = bg.match(/[\d.]+/g);
+                if (m) return [+m[0], +m[1], +m[2]];
+            }
+            el = el.parentElement;
+        }
+        return [3, 6, 4]; // --dark-void fallback
+    }
 
-document.querySelectorAll(greenBgSelectors.join(', ')).forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        if (customCursor) customCursor.classList.add('blend-difference');
+    document.addEventListener('mousemove', e => {
+        // elementFromPoint skips pointer-events:none canvas, hits real element
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        if (!el || !cursorCanvas) return;
+
+        const [r, g, b] = getEffectiveBg(el);
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        if (lum > 100) {
+            // Light bg (beige, green sections) → difference pops the gold
+            cursorCanvas.style.mixBlendMode = 'difference';
+            if (customCursor) customCursor.classList.add('blend-difference');
+        } else {
+            // Dark bg → screen glows the gold
+            cursorCanvas.style.mixBlendMode = 'screen';
+            if (customCursor) customCursor.classList.remove('blend-difference');
+        }
     });
-    el.addEventListener('mouseleave', () => {
-        if (customCursor) customCursor.classList.remove('blend-difference');
-    });
-});
+})();
 
 document.addEventListener('mousemove', (e) => {
     cursorMouseX = e.clientX;
@@ -475,26 +494,34 @@ if (gContainer) {
 
 // === 8. FOOTER ===
 initSplashCursor('footer-webgl');
-gsap.fromTo('.footer-content', { y: -150 }, { y: 0, ease: "none", scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: true } });
+// gsap.fromTo('.footer-content', { y: -150 }, { y: 0, ease: "none", scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: true } });
 gsap.to('.footer-large-text', { y: 15, duration: 3, yoyo: true, repeat: -1, ease: "sine.inOut" });
 
-gsap.to('.footer-letter', {
-    y: "0%",
-    opacity: 1,
-    duration: 1.2,
-    stagger: 0.1,
-    ease: "power3.out",
-    scrollTrigger: {
-        trigger: "#footer-section",
-        start: "top center",
-        toggleActions: "play none none reverse"
+// Footer bottom bar — banana lengths counter & scroll-to-top
+const footerScrollMsg = document.getElementById('footerScrollMsg');
+const footerTopBtn = document.getElementById('footerTopBtn');
+if (footerScrollMsg) {
+    const BANANA_PX = 605; // 16cm banana at 96dpi (16 * 37.795)
+    function updateBananaCount() {
+        const bananas = Math.round(window.scrollY / BANANA_PX);
+        footerScrollMsg.textContent = `thanks for scrolling ${bananas} banana length${bananas !== 1 ? 's' : ''}`;
     }
-});
+    window.addEventListener('scroll', updateBananaCount);
+    updateBananaCount();
+}
+if (footerTopBtn) {
+    footerTopBtn.addEventListener('click', e => {
+        e.preventDefault();
+        lenis.scrollTo(0, { duration: 1.5 });
+    });
+}
 
 // === 9. SCROLL ANIMATIONS ===
 gsap.from('.about-text', { y: 60, opacity: 0, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-section', start: 'top 75%' } });
 gsap.from('.about-image-container', { y: 80, opacity: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: '.about-section', start: 'top 70%' } });
-gsap.from('.service-card', { y: 80, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.15, scrollTrigger: { trigger: '.services-grid-section', start: 'top 80%' } });
+
+// === 9.1 SERVICES SCROLL TRACK ===
+// Replaced by services.js
 
 // === ABOUT ME — single-sweep hand-drawn reveal ===
 (function initPencilDraw() {
@@ -528,30 +555,37 @@ window.addEventListener('resize', () => {
 // === 10. TESTIMONIALS CAROUSEL ===
 const rawTestimonials = [
     {
-        name: "ayzz.designer",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
+        name: "~Ayaz Abdul Mutakabur",
+        image: "https://scontent.cdninstagram.com/v/t51.82787-19/565308928_18056331812636238_5448057324022458822_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=105&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=MS_qjoBpVEMQ7kNvwEtpUD7&_nc_oc=AdpYvOq8m-UWqUC2ao_Jk8BII94m1CuQCTXmw-fcpL2yIH3OZPv5HBRrbpxqtRanNS8xKGIuXEZFiqSpgMwYqv6c&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=AP1XKxpmC06FDxFnT_L4rg&_nc_ss=7b6a8&oh=00_Af49KL346GJoosMscfRalVdVuVLhY2TazN0jB2uUAAwlrg&oe=6A0E5659",
+        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is.",
+        designation: "ayzz.designer"
     },
     {
-        name: "ayzz.designer",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
+        name: "~Amar Salvi",
+        image: "https://yt3.googleusercontent.com/S_lqN8YGmMw327livmFV1iFGqyzo7ISA5XoqcfPX4gPHU0tJEjXvg5XwpZwcowriyJVVmkFLi4k=s160-c-k-c0x00ffffff-no-rj",
+        text: "“Ehtishaam has been a mainstay for my channel, right from inception. He is a fast learner, and even though he did not know about this niche, he learnt fast. He works hard, keeps to the committed timelines, is straightforward about his availability and always delivers. His insights have helped grow the channel much faster than it would have otherwise as a niche channel.",
+        designation: "The Weekend Aquarist"
     },
-    {
-        name: "ayzz.designer",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
-    },
-    {
-        name: "ayzz.designer",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
-    },
-    {
-        name: "ayzz.designer",
-        image: "https://randomuser.me/api/portraits/men/32.jpg",
-        text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
-    }
+    // {
+    //     name: "ayzz.designer",
+    //     image: "https://randomuser.me/api/portraits/men/32.jpg",
+    //     text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is.",
+    // },
+    // {
+    //     name: "ayzz.designer",
+    //     image: "https://randomuser.me/api/portraits/men/32.jpg",
+    //     text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is.",
+    // },
+    // {
+    //     name: "ayzz.designer",
+    //     image: "https://randomuser.me/api/portraits/men/32.jpg",
+    //     text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
+    // },
+    // {
+    //     name: "ayzz.designer",
+    //     image: "https://randomuser.me/api/portraits/men/32.jpg",
+    //     text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is."
+    // }
 ];
 
 // Duplicate the testimonials array many times to create a seamless infinite loop effect
@@ -576,11 +610,14 @@ if (tTrack) {
                 <div class="testimonial-card-header">
                     <img src="${item.image}" alt="${item.name}" class="testimonial-profile-img">
                     <div class="testimonial-user-info">
-                        <h3>${item.name}</h3>
+                        <h3>${item.designation}</h3>
                     </div>
                 </div>
                 <div class="testimonial-text">
                     ${item.text}
+                </div>
+                <div class="testimonial-footer">
+                    ${item.name}
                 </div>
             `;
             tTrack.appendChild(card);
