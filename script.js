@@ -385,11 +385,25 @@ const track = document.getElementById('track');
 const viewport = document.getElementById('viewport');
 if (track && viewport) {
     const videoSection = document.getElementById('video-scroll') || viewport;
-    let cardW = window.innerWidth <= 768 ? 240 : 280, gap = 28, step = cardW + gap, totalOrig = videoFiles.length, setW = totalOrig * step, copies = 3, totalCards = totalOrig * copies, cardsData = [];
-    function loopSeg(v, s, e) { v.addEventListener('timeupdate', () => { if (v.currentTime >= e) v.currentTime = s; }); v.currentTime = s; }
+    function getShortFormConfig() {
+        const w = window.innerWidth;
+        if (w <= 480) {
+            return { w: 275, g: 22 };
+        } else if (w <= 768) {
+            return { w: 300, g: 26 };
+        } else {
+            return { w: 280, g: 28 };
+        }
+    }
+    const initCfg = getShortFormConfig();
+    let cardW = initCfg.w, gap = initCfg.g, step = cardW + gap, totalOrig = videoFiles.length, setW = totalOrig * step, copies = 3, totalCards = totalOrig * copies, cardsData = [];
+    function loopSeg(v, s, e) {
+        v.addEventListener('timeupdate', () => { if (v.currentTime >= e) v.currentTime = s; });
+        v.addEventListener('loadedmetadata', () => { if (v.currentTime < s) v.currentTime = s; }, { once: true });
+    }
     for (let i = 0; i < totalCards; i++) {
         const oi = i % totalOrig, card = document.createElement('div'); card.className = 'video-card';
-        const v = document.createElement('video'); v.src = videoFiles[oi]; v.preload = 'metadata'; v.loop = true; v.controls = true; v.playsInline = true; v.muted = true;
+        const v = document.createElement('video'); v.src = videoFiles[oi]; v.preload = 'none'; v.loop = true; v.controls = true; v.playsInline = true; v.muted = true;
         if (oi === 0) loopSeg(v, 12, 18);
         card.appendChild(v); track.appendChild(card);
         const ox = i - Math.floor(totalCards / 2); cardsData.push({ element: card, video: v, initialX: ox * step, isHovered: false, currentVolume: 0 });
@@ -402,7 +416,9 @@ if (track && viewport) {
         });
     }
     window.addEventListener('resize', () => {
-        cardW = window.innerWidth <= 768 ? 240 : 280;
+        const cfg = getShortFormConfig();
+        cardW = cfg.w;
+        gap = cfg.g;
         step = cardW + gap;
         setW = totalOrig * step;
         cardsData.forEach((item, idx) => {
@@ -423,8 +439,11 @@ if (track && viewport) {
         if (vSX > setW) { vSX -= setW; vTX -= setW; } else if (vSX < -setW) { vSX += setW; vTX += setW; }
 
         const rect = videoSection.getBoundingClientRect();
-        const buffer = 150;
-        const isSectionVisible = rect.top < window.innerHeight + buffer && rect.bottom > -buffer;
+        const vHeight = window.innerHeight;
+        const bottomFade = Math.max(0, Math.min(1, (rect.bottom - vHeight * 0.35) / (vHeight * 0.5)));
+        const topFade = Math.max(0, Math.min(1, (vHeight * 0.65 - rect.top) / (vHeight * 0.5)));
+        const verticalFade = Math.min(bottomFade, topFade);
+        const isSectionVisible = verticalFade > 0.01;
 
         cardsData.forEach(item => {
             let xP = item.initialX + vSX; const mD = setW * 1.5;
@@ -451,7 +470,7 @@ if (track && viewport) {
                     if (!item.video.paused) item.video.pause();
                 }
 
-                const dV = Math.max(0, 1 - (dist / 800)); const tV = (shouldPlay ? dV : 0) * 0.3;
+                const dV = Math.max(0, 1 - (dist / 800)); const tV = (shouldPlay ? dV : 0) * 0.3 * verticalFade;
                 item.currentVolume += (tV - item.currentVolume) * (shouldPlay ? 0.3 : 0.05);
                 item.video.volume = Math.max(0, Math.min(1, item.currentVolume));
                 if (shouldPlay || item.currentVolume > 0.01) {
@@ -927,6 +946,19 @@ if (tTrack) {
         if (e.key === 'ArrowLeft') goToTSlide(tCurrentIndex - 1);
         else if (e.key === 'ArrowRight') goToTSlide(tCurrentIndex + 1);
     });
+
+    const prevBtn = document.getElementById('testimonial-prev');
+    const nextBtn = document.getElementById('testimonial-next');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            goToTSlide(tCurrentIndex - 1);
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            goToTSlide(tCurrentIndex + 1);
+        });
+    }
 }
 
 // === 11. SCROLL MARQUEE ===

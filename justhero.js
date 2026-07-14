@@ -205,8 +205,8 @@ function updatePointer(clientX, clientY) {
     if (nameEl) { const r = nameEl.getBoundingClientRect(); nameEl.style.setProperty('--mx', (clientX - r.left) + 'px'); nameEl.style.setProperty('--my', (clientY - r.top) + 'px'); }
 }
 addEventListener('mousemove', e => updatePointer(e.clientX, e.clientY));
-addEventListener('touchmove', e => { if (e.touches.length > 0) updatePointer(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-addEventListener('touchstart', e => { if (e.touches.length > 0) updatePointer(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+addEventListener('touchmove', e => { if (typeof isMobileMode === 'function' && isMobileMode() && !isMobileGameMode) return; if (e.touches.length > 0) updatePointer(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+addEventListener('touchstart', e => { if (typeof isMobileMode === 'function' && isMobileMode() && !isMobileGameMode) return; if (e.touches.length > 0) updatePointer(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
 
 // Auto-sweep name spotlight if no interaction yet OR idle for 30 seconds
 let sweepTime = 0;
@@ -239,6 +239,89 @@ const heroObserver = new IntersectionObserver((entries) => {
 const heroSectionToObserve = document.getElementById('hero');
 if (heroSectionToObserve) {
     heroObserver.observe(heroSectionToObserve);
+}
+
+// ─── MOBILE GAME vs SCROLL LOCKING ───
+let isMobileGameMode = true; // By default on mobile, play game at first
+let lastTapTime = 0;
+let lastTapPos = { x: 0, y: 0 };
+
+function isMobileMode() {
+    return window.innerWidth <= 768;
+}
+
+function updateMobileGameBannerUI() {
+    const bannerEl = document.getElementById('mobileGameBanner');
+    const textEl = document.getElementById('mobileGameBannerText');
+    if (!bannerEl || !textEl) return;
+
+    if (isMobileGameMode) {
+        bannerEl.classList.remove('scroll-mode');
+        textEl.textContent = 'DOUBLE TAP TO EXIT GAME • EXPLORE WEBSITE';
+    } else {
+        bannerEl.classList.add('scroll-mode');
+        textEl.textContent = 'DOUBLE TAP TO ENTER GAME MODE';
+    }
+
+    if (typeof gsap !== 'undefined') {
+        gsap.fromTo(bannerEl, { opacity: 0.2 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+    }
+}
+
+function toggleMobileGameMode() {
+    if (!isMobileMode()) return;
+    isMobileGameMode = !isMobileGameMode;
+    snd('collect');
+    updateMobileGameBannerUI();
+}
+
+if (heroSectionToObserve) {
+    // 1. Lock touch scrolling on hero when in Game Mode
+    heroSectionToObserve.addEventListener('touchmove', (e) => {
+        if (!isMobileMode() || !isMobileGameMode) return;
+        const target = e.target;
+        if (target && (target.tagName === 'A' || target.closest('a') || target.closest('nav') || target.closest('#mobileGameBanner'))) {
+            return;
+        }
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // 2. Double click handler
+    heroSectionToObserve.addEventListener('dblclick', (e) => {
+        if (!isMobileMode()) return;
+        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav') || e.target.closest('#mobileGameBanner'))) return;
+        toggleMobileGameMode();
+    });
+
+    // 3. Custom touch double-tap handler for 100% reliability across all touchscreen devices
+    heroSectionToObserve.addEventListener('touchend', (e) => {
+        if (!isMobileMode()) return;
+        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav') || e.target.closest('#mobileGameBanner'))) return;
+        const now = performance.now();
+        const touch = e.changedTouches && e.changedTouches[0];
+        const pos = touch ? { x: touch.clientX, y: touch.clientY } : { x: 0, y: 0 };
+        const dist = Math.hypot(pos.x - lastTapPos.x, pos.y - lastTapPos.y);
+
+        if (now - lastTapTime < 350 && dist < 50) {
+            toggleMobileGameMode();
+            lastTapTime = 0;
+        } else {
+            lastTapTime = now;
+            lastTapPos = pos;
+        }
+    }, { passive: true });
+}
+
+// Banner direct tap toggle
+const mobileBannerEl = document.getElementById('mobileGameBanner');
+if (mobileBannerEl) {
+    mobileBannerEl.addEventListener('click', (e) => {
+        if (!isMobileMode()) return;
+        e.stopPropagation();
+        toggleMobileGameMode();
+    });
 }
 
 function tick() {
