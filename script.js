@@ -451,7 +451,7 @@ const track = document.getElementById('track');
 const viewport = document.getElementById('viewport');
 if (track && viewport) {
     const videoSection = document.getElementById('video-scroll') || viewport;
-    const cardW = 320, gap = 20, step = cardW + gap, totalOrig = videoFiles.length, setW = totalOrig * step, copies = 3, totalCards = totalOrig * copies, cardsData = [];
+    let cardW = window.innerWidth <= 768 ? 240 : 280, gap = 28, step = cardW + gap, totalOrig = videoFiles.length, setW = totalOrig * step, copies = 3, totalCards = totalOrig * copies, cardsData = [];
     function loopSeg(v, s, e) { v.addEventListener('timeupdate', () => { if (v.currentTime >= e) v.currentTime = s; }); v.currentTime = s; }
     for (let i = 0; i < totalCards; i++) {
         const oi = i % totalOrig, card = document.createElement('div'); card.className = 'video-card';
@@ -467,6 +467,15 @@ if (track && viewport) {
             cardsData[i].isHovered = false;
         });
     }
+    window.addEventListener('resize', () => {
+        cardW = window.innerWidth <= 768 ? 240 : 280;
+        step = cardW + gap;
+        setW = totalOrig * step;
+        cardsData.forEach((item, idx) => {
+            const ox = idx - Math.floor(totalCards / 2);
+            item.initialX = ox * step;
+        });
+    });
     let vSX = 0, vTX = 0, vV = 0, vD = false, vLM = 0;
     viewport.addEventListener('mousedown', e => { vD = true; vLM = e.clientX; });
     window.addEventListener('mousemove', e => { if (!vD) return; const dx = e.clientX - vLM; vTX += dx; vV = dx; vLM = e.clientX; });
@@ -498,11 +507,20 @@ if (track && viewport) {
                 item.video.volume = 0;
                 item.video.muted = true;
             } else {
-                if (item.video.paused) item.video.play().catch(() => { });
-                const dV = Math.max(0, 1 - (dist / 800)); const tV = (item.isHovered ? dV : 0) * 0.3;
-                item.currentVolume += (tV - item.currentVolume) * (item.isHovered ? 0.3 : 0.05);
+                const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+                const isCenter = dist < 180;
+                const shouldPlay = item.isHovered || (isMobile && isCenter);
+
+                if (shouldPlay) {
+                    if (item.video.paused) item.video.play().catch(() => { });
+                } else {
+                    if (!item.video.paused) item.video.pause();
+                }
+
+                const dV = Math.max(0, 1 - (dist / 800)); const tV = (shouldPlay ? dV : 0) * 0.3;
+                item.currentVolume += (tV - item.currentVolume) * (shouldPlay ? 0.3 : 0.05);
                 item.video.volume = Math.max(0, Math.min(1, item.currentVolume));
-                if (item.isHovered || item.currentVolume > 0.01) {
+                if (shouldPlay || item.currentVolume > 0.01) {
                     item.video.muted = false;
                 } else {
                     item.video.muted = true;
@@ -704,7 +722,6 @@ if (gContainer) {
 }
 
 // === 8. FOOTER ===
-initSplashCursor('footer-webgl');
 // gsap.fromTo('.footer-content', { y: -150 }, { y: 0, ease: "none", scrollTrigger: { trigger: "footer", start: "top bottom", end: "bottom bottom", scrub: true } });
 gsap.to('.footer-large-text', { y: 15, duration: 3, yoyo: true, repeat: -1, ease: "sine.inOut" });
 
