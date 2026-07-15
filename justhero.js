@@ -245,9 +245,10 @@ if (heroSectionToObserve) {
 let isMobileGameMode = true; // By default on mobile, play game at first
 let lastTapTime = 0;
 let lastTapPos = { x: 0, y: 0 };
+let lastToggleTime = 0;
 
 function isMobileMode() {
-    return window.innerWidth <= 768;
+    return window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth <= 1024) || (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024);
 }
 
 function updateMobileGameBannerUI() {
@@ -270,6 +271,9 @@ function updateMobileGameBannerUI() {
 
 function toggleMobileGameMode() {
     if (!isMobileMode()) return;
+    const now = performance.now();
+    if (now - lastToggleTime < 400) return;
+    lastToggleTime = now;
     isMobileGameMode = !isMobileGameMode;
     snd('collect');
     updateMobileGameBannerUI();
@@ -280,7 +284,7 @@ if (heroSectionToObserve) {
     heroSectionToObserve.addEventListener('touchmove', (e) => {
         if (!isMobileMode() || !isMobileGameMode) return;
         const target = e.target;
-        if (target && (target.tagName === 'A' || target.closest('a') || target.closest('nav') || target.closest('#mobileGameBanner'))) {
+        if (target && (target.tagName === 'A' || target.closest('a') || target.closest('nav'))) {
             return;
         }
         if (e.cancelable) {
@@ -291,20 +295,20 @@ if (heroSectionToObserve) {
     // 2. Double click handler
     heroSectionToObserve.addEventListener('dblclick', (e) => {
         if (!isMobileMode()) return;
-        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav') || e.target.closest('#mobileGameBanner'))) return;
+        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav'))) return;
         toggleMobileGameMode();
     });
 
     // 3. Custom touch double-tap handler for 100% reliability across all touchscreen devices
     heroSectionToObserve.addEventListener('touchend', (e) => {
         if (!isMobileMode()) return;
-        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav') || e.target.closest('#mobileGameBanner'))) return;
+        if (e.target && (e.target.tagName === 'A' || e.target.closest('a') || e.target.closest('nav'))) return;
         const now = performance.now();
         const touch = e.changedTouches && e.changedTouches[0];
         const pos = touch ? { x: touch.clientX, y: touch.clientY } : { x: 0, y: 0 };
         const dist = Math.hypot(pos.x - lastTapPos.x, pos.y - lastTapPos.y);
 
-        if (now - lastTapTime < 350 && dist < 50) {
+        if (now - lastTapTime < 600 && dist < 160) {
             toggleMobileGameMode();
             lastTapTime = 0;
         } else {
