@@ -743,20 +743,23 @@ window.addEventListener('resize', () => {
 const rawTestimonials = [
     {
         name: "~Ayaz Abdul Mutakabur",
+        role: "Content Creator",
         image: "ayzz_profile.jpg",
         text: "Worked with a lot of editors before, Ehtisham is the best of all of them. Most editors just make it look good and send it. He actually cares video perform well, thinks about how the video will go viral, suggests ideas. His editing skills? 🔥. Honestly, I'm a little scared writing this cuz with this review that he'll get some better job & won't work with me, haha. That tells you how good he is.",
         designation: "ayzz.designer"
     },
     {
         name: "~Amar Salvi",
+        role: "YouTuber",
         image: "https://yt3.googleusercontent.com/S_lqN8YGmMw327livmFV1iFGqyzo7ISA5XoqcfPX4gPHU0tJEjXvg5XwpZwcowriyJVVmkFLi4k=s160-c-k-c0x00ffffff-no-rj",
         text: "“Ehtishaam has been a mainstay for my channel, right from inception. He is a fast learner, and even though he did not know about this niche, he learnt fast. He works hard, keeps to the committed timelines, is straightforward about his availability and always delivers. His insights have helped grow the channel much faster than it would have otherwise as a niche channel.",
         designation: "The Weekend Aquarist"
     },
     {
         name: "~Nikita Jeswani",
+        role: "Founder",
         image: "biege logos/it_square_icon.png",
-        text: "“Oh i love Ehtishaam's work, he's so creative, his designs are unique, he puts good thought & effort in this work.<br><br>Can totally rely on him for such stuff”",
+        text: "“Oh I love Ehtishaam's work, he's so creative, his designs are unique, he puts good thought & effort in this work.<br><br>Can totally rely on him for such stuff”",
         designation: "IT Square",
         link: "https://theitsquare.com/?srsltid=AfmBOooX_tzqTmfhCH2p4VAwy1RYlLv5zO0xMDchFkGc33swSqFVHbd2"
     },
@@ -800,18 +803,26 @@ if (tTrack) {
             card.className = `testimonial-card ${index === tCurrentIndex ? 'active' : ''}`;
             card.onclick = () => goToTSlide(index);
 
+            const cleanName = item.name.replace(/^~\s*/, '');
+            const starsHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#146c43"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>'.repeat(5);
+
             card.innerHTML = `
                 <div class="testimonial-card-header">
-                    <img src="${item.image}" alt="${item.name}" class="testimonial-profile-img">
-                    <div class="testimonial-user-info">
-                        <h3>${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation()">${item.designation}</a>` : item.designation}</h3>
-                    </div>
+                    <img src="${item.image}" alt="${cleanName}" class="testimonial-profile-img">
+                </div>
+                <div class="testimonial-stars">
+                    ${starsHTML}
                 </div>
                 <div class="testimonial-text">
                     ${item.text}
                 </div>
-                <div class="testimonial-footer">
-                    ${item.name}
+                <div class="testimonial-divider"></div>
+                <div class="testimonial-author-block">
+                    <div class="testimonial-author-title">
+                        <span class="testimonial-author-name">${cleanName}</span>
+                        ${item.role ? `<span class="testimonial-author-dot">•</span><span class="testimonial-author-role">${item.role}</span>` : ''}
+                    </div>
+                    ${item.designation ? `<div class="testimonial-author-company">${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation()">${item.designation}</a>` : item.designation}</div>` : ''}
                 </div>
             `;
             tTrack.appendChild(card);
@@ -837,7 +848,9 @@ if (tTrack) {
 
         tTrack.style.transform = `translateX(calc(-50% + ${offset}px))`;
 
-        const targetGap = 20;
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 480;
+        const targetGap = isSmallMobile ? 14 : (isMobile ? 18 : 24);
         const desiredX = [];
         desiredX[tCurrentIndex] = 0;
 
@@ -846,8 +859,8 @@ if (tTrack) {
 
         for (let i = 0; i < cards.length; i++) {
             const dist = Math.abs(i - tCurrentIndex);
-            scales[i] = dist === 0 ? 1.05 : 0.85 - (0.15 * dist);
-            translateYs[i] = dist === 0 ? -30 : Math.pow(dist, 1.4) * 60;
+            scales[i] = dist === 0 ? 1.0 : Math.max(0.75, (isMobile ? 0.84 : 0.90) - (0.08 * dist));
+            translateYs[i] = 0; // Keep all cards perfectly aligned vertically on the same baseline
         }
 
         for (let i = tCurrentIndex + 1; i < cards.length; i++) {
@@ -877,7 +890,7 @@ if (tTrack) {
             const shiftX = desiredX[index] - flexX;
 
             card.style.transform = `translateX(${shiftX}px) scale(${scale}) translateY(${translateY}px)`;
-            card.style.opacity = 1;
+            card.style.opacity = distance === 0 ? 1 : Math.max(0.15, 1 - ((isMobile ? 0.38 : 0.3) * distance));
             card.style.zIndex = 20 - distance;
         });
     }
