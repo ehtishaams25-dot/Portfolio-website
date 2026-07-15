@@ -81,8 +81,8 @@ html.lenis {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 9999;
-    pointer-events: none;
+    z-index: 2147483647 !important;
+    pointer-events: none !important;
     mix-blend-mode: screen;
     transition: opacity 0.3s;
 }
@@ -823,8 +823,8 @@ body.nav-open .chromatic-aberration {
     position: fixed;
     top: 0;
     left: 0;
-    pointer-events: none;
-    z-index: 9999;
+    pointer-events: none !important;
+    z-index: 2147483647 !important;
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
@@ -841,7 +841,7 @@ body.nav-open .chromatic-aberration {
         padding 0.3s cubic-bezier(0.25, 1, 0.5, 1),
         opacity 0.3s ease;
     opacity: 0;
-    will-change: top, left, transform, width, height;
+    will-change: top, left, width, height;
 }
 
 body.show-triangle .custom-cursor {
@@ -852,12 +852,16 @@ body.show-triangle .custom-cursor {
     position: absolute;
     width: 24px;
     height: 24px;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .custom-cursor.blend-difference {
     mix-blend-mode: difference;
+}
+
+.custom-cursor.blend-difference .cursor-triangle {
+    filter: none !important;
 }
 
 .custom-cursor.blend-difference .cursor-triangle path {
@@ -870,11 +874,13 @@ body.show-triangle .custom-cursor {
     padding: 0 1.5rem;
     background-color: var(--forest-green);
     border-radius: 2rem;
+    mix-blend-mode: normal !important;
 }
 
 .custom-cursor.active .cursor-triangle {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.5) !important;
+    filter: none !important;
 }
 
 .custom-cursor .cursor-text {
@@ -892,6 +898,41 @@ body.show-triangle .custom-cursor {
 .custom-cursor.active .cursor-text {
     opacity: 1;
     transition-delay: 0.15s;
+}
+
+.custom-cursor .cursor-hand {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.2s, transform 0.2s;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.custom-cursor.grab-mode {
+    width: 36px !important;
+    height: 36px !important;
+    background-color: transparent !important;
+    mix-blend-mode: normal !important;
+}
+
+.custom-cursor.grab-mode .cursor-triangle {
+    opacity: 0;
+    transform: scale(0.5) !important;
+}
+
+.custom-cursor.grab-mode .cursor-text {
+    opacity: 0;
+}
+
+.custom-cursor.grab-mode .cursor-hand {
+    opacity: 1;
+    transform: scale(1) !important;
+}
+
+.custom-cursor.grab-mode.grabbing .cursor-hand {
+    transform: scale(0.85) rotate(-14deg) !important;
 }
 
 /* =========================================

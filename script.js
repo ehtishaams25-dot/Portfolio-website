@@ -222,17 +222,28 @@ if (rwSlider) {
         }
     });
 
-    // Custom Cursor Pill Toggle
-    if (customCursor) {
-        carouselItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                customCursor.classList.add('active');
-            });
-            item.addEventListener('mouseleave', () => {
+    // Global event delegation for Custom Cursor Pill Toggle on carousel-item & video-card
+    document.addEventListener('mouseover', (e) => {
+        if (!customCursor || isMobileCursorDisabled()) return;
+        const item = e.target.closest('.carousel-item, .video-card');
+        if (item) {
+            const textSpan = customCursor.querySelector('.cursor-text');
+            if (textSpan) {
+                textSpan.textContent = item.classList.contains('video-card') ? 'unmute / view' : 'view full video';
+            }
+            customCursor.classList.add('active');
+        }
+    });
+    document.addEventListener('mouseout', (e) => {
+        if (!customCursor || isMobileCursorDisabled()) return;
+        const item = e.target.closest('.carousel-item, .video-card');
+        if (item) {
+            const related = e.relatedTarget;
+            if (!related || !item.contains(related)) {
                 customCursor.classList.remove('active');
-            });
-        });
-    }
+            }
+        }
+    });
 }
 
 // === GLOBAL CURSOR TRACKING ===
@@ -242,39 +253,91 @@ let cursorLastX = cursorMouseX;
 let cursorLastY = cursorMouseY;
 let cursorBank = 0;
 
-// === SMART BLEND MODE ===
-(function () {
-    function getEffectiveBg(el) {
-        while (el && el !== document.documentElement) {
-            const bg = window.getComputedStyle(el).backgroundColor;
-            if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-                const m = bg.match(/[\d.]+/g);
-                if (m) return [+m[0], +m[1], +m[2]];
-            }
-            el = el.parentElement;
+// Helper to determine active section and update dot vs triangle visibility
+function updateCursorSectionState(targetEl) {
+    if (isMobileCursorDisabled()) return;
+
+    let isInsideGameSection = false;
+    if (targetEl && targetEl.closest) {
+        if (targetEl.closest('#hero') && !document.body.classList.contains('nav-open') && !targetEl.closest('.hero-logo') && !targetEl.closest('.glass-nav') && !targetEl.closest('.nav-close-btn')) {
+            isInsideGameSection = true;
         }
-        return [3, 6, 4]; // --dark-void fallback
+    } else if (window.scrollY === 0 && !document.body.classList.contains('nav-open')) {
+        isInsideGameSection = true;
     }
 
-    document.addEventListener('mousemove', e => {
-        // elementFromPoint skips pointer-events:none canvas, hits real element
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        if (!el || !cursorCanvas) return;
+    if (isInsideGameSection) {
+        document.body.classList.remove('show-triangle');
+        if (cursorCanvas) cursorCanvas.style.opacity = '1';
+    } else {
+        document.body.classList.add('show-triangle');
+        if (cursorCanvas) cursorCanvas.style.opacity = '0';
+    }
+}
 
+function getEffectiveBg(el) {
+    while (el && el !== document.documentElement) {
+        const bg = window.getComputedStyle(el).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+            const m = bg.match(/[\d.]+/g);
+            if (m) return [+m[0], +m[1], +m[2]];
+        }
+        el = el.parentElement;
+    }
+    return [3, 6, 4]; // --dark-void fallback
+}
+
+// Master updater: syncs cursor pill state, section visibility, and blend mode under stationary or moving mouse
+function updateCursorUnderPoint() {
+    if (!customCursor || isMobileCursorDisabled()) return;
+    const el = document.elementFromPoint(cursorMouseX, cursorMouseY);
+    if (!el) return;
+
+    // 1. Section check (dot vs triangle)
+    updateCursorSectionState(el);
+
+    // 2. Pill vs Grab vs Triangle state check
+    const carouselCard = el.closest('.carousel-item');
+    const videoScrollArea = el.closest('.video-card, #viewport, #video-scroll');
+
+    if (carouselCard) {
+        const textSpan = customCursor.querySelector('.cursor-text');
+        if (textSpan) textSpan.textContent = 'view full video';
+        customCursor.classList.remove('grab-mode');
+        if (!customCursor.classList.contains('active')) {
+            customCursor.classList.add('active');
+        }
+    } else if (videoScrollArea) {
+        customCursor.classList.remove('active');
+        if (!customCursor.classList.contains('grab-mode')) {
+            customCursor.classList.add('grab-mode');
+        }
+    } else {
+        if (customCursor.classList.contains('active')) {
+            customCursor.classList.remove('active');
+        }
+        if (customCursor.classList.contains('grab-mode')) {
+            customCursor.classList.remove('grab-mode');
+        }
+    }
+
+    // 3. Smart blend mode check
+    if (cursorCanvas) {
         const [r, g, b] = getEffectiveBg(el);
         const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-
         if (lum > 100) {
-            // Light bg (beige, green sections) → difference pops the gold
             cursorCanvas.style.mixBlendMode = 'difference';
-            if (customCursor) customCursor.classList.add('blend-difference');
         } else {
-            // Dark bg → screen glows the gold
             cursorCanvas.style.mixBlendMode = 'screen';
-            if (customCursor) customCursor.classList.remove('blend-difference');
         }
-    });
-})();
+    }
+
+    if (!customCursor.classList.contains('active') && !customCursor.classList.contains('grab-mode')) {
+        customCursor.classList.add('blend-difference');
+    } else {
+        customCursor.classList.remove('blend-difference');
+    }
+}
 
 document.addEventListener('mousemove', (e) => {
     if (isMobileCursorDisabled()) return;
@@ -286,51 +349,33 @@ document.addEventListener('mousemove', (e) => {
         customCursor.style.top = `${cursorMouseY}px`;
     }
 
-    let shouldShowTriangle = false;
-    if (document.body.classList.contains('nav-open')) {
-        shouldShowTriangle = true;
-    } else if (window.scrollY > window.innerHeight * 0.8) {
-        shouldShowTriangle = true;
-    } else {
-        const target = e.target;
-        if (target && target.closest && target.closest('.hero-logo')) {
-            shouldShowTriangle = true;
-        }
-    }
-
-    if (shouldShowTriangle) {
-        document.body.classList.add('show-triangle');
-        if (cursorCanvas) cursorCanvas.style.opacity = '0';
-    } else {
-        document.body.classList.remove('show-triangle');
-        if (cursorCanvas) cursorCanvas.style.opacity = '1';
-    }
+    updateCursorUnderPoint();
 });
 
 function animateCursorPhysics() {
     requestAnimationFrame(animateCursorPhysics);
     if (!customCursor) return;
 
+    // Sync cursor state frame-by-frame during Lenis/GSAP smooth scroll
+    updateCursorUnderPoint();
+
     let vx = cursorMouseX - cursorLastX;
     let vy = cursorMouseY - cursorLastY;
     cursorLastX = cursorMouseX;
     cursorLastY = cursorMouseY;
 
-    // Calculate air drag rotation based on movement speed
-    // Higher horizontal velocity = more bank rotation
     let targetBank = vx * 1.5;
     targetBank = Math.max(-50, Math.min(50, targetBank));
 
-    // Smoothly apply the bank effect and spring back to 0 when stopped
     cursorBank += (targetBank - cursorBank) * 0.1;
 
     const cursorSvg = customCursor.querySelector('.cursor-triangle');
     if (cursorSvg) {
-        // We add the baseline -135deg if the SVG is pointing top-left by default.
-        // Wait, earlier I saw the baseline rotation in script.js was -135. Let me double check index.html to see what the SVG looks like.
-        // Actually, if we just set it to rotate(cursorBank deg), let's see if it looks right. I will add the base angle if needed.
-        // But let's check index.html first.
-        cursorSvg.style.transform = `rotate(${cursorBank}deg)`;
+        if (customCursor.classList.contains('active') || customCursor.classList.contains('grab-mode')) {
+            cursorSvg.style.transform = '';
+        } else {
+            cursorSvg.style.transform = `rotate(${cursorBank}deg)`;
+        }
     }
 }
 animateCursorPhysics();
@@ -338,13 +383,7 @@ animateCursorPhysics();
 // Update cursor state on scroll too
 window.addEventListener('scroll', () => {
     if (isMobileCursorDisabled()) return;
-    if (window.scrollY > window.innerHeight * 0.8) {
-        document.body.classList.add('show-triangle');
-        if (cursorCanvas) cursorCanvas.style.opacity = '0';
-    } else if (!document.body.classList.contains('nav-open')) {
-        document.body.classList.remove('show-triangle');
-        if (cursorCanvas) cursorCanvas.style.opacity = '1';
-    }
+    updateCursorUnderPoint();
 });
 
 // === 6. VIDEO CAROUSEL ===
@@ -405,12 +444,12 @@ function initVideoCarousel() {
         });
     });
     let vSX = 0, vTX = 0, vV = 0, vD = false, vLM = 0;
-    viewport.addEventListener('mousedown', e => { vD = true; vLM = e.clientX; });
+    viewport.addEventListener('mousedown', e => { vD = true; vLM = e.clientX; if (customCursor) customCursor.classList.add('grabbing'); });
     window.addEventListener('mousemove', e => { if (!vD) return; const dx = e.clientX - vLM; vTX += dx; vV = dx; vLM = e.clientX; });
-    window.addEventListener('mouseup', () => { vD = false; });
-    viewport.addEventListener('touchstart', e => { vD = true; vLM = e.touches[0].clientX; }, { passive: true });
+    window.addEventListener('mouseup', () => { vD = false; if (customCursor) customCursor.classList.remove('grabbing'); });
+    viewport.addEventListener('touchstart', e => { vD = true; vLM = e.touches[0].clientX; if (customCursor) customCursor.classList.add('grabbing'); }, { passive: true });
     window.addEventListener('touchmove', e => { if (!vD) return; const dx = e.touches[0].clientX - vLM; vTX += dx; vV = dx; vLM = e.touches[0].clientX; }, { passive: true });
-    window.addEventListener('touchend', () => { vD = false; });
+    window.addEventListener('touchend', () => { vD = false; if (customCursor) customCursor.classList.remove('grabbing'); });
     function updateCarousel() {
         if (document.hidden) {
             requestAnimationFrame(updateCarousel);
