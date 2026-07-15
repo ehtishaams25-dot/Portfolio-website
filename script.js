@@ -32,10 +32,14 @@ lenis.stop();
 // Set initial logo state for smooth scale-up entrance
 gsap.set('#preloaderLogo', { scale: 0.65, opacity: 0 });
 
-let isPageLoaded = false;
+let isPageLoaded = document.readyState === 'complete' || document.readyState === 'interactive';
 window.addEventListener('load', () => {
     isPageLoaded = true;
 });
+// Safety fallback: ensure curtain always lifts promptly even if background assets take time
+setTimeout(() => {
+    isPageLoaded = true;
+}, 800);
 
 preloaderTl.play();
 
@@ -49,10 +53,10 @@ preloaderTl.to('#preloaderLogo', {
 
 // 2. Pause if page is not yet loaded
 preloaderTl.add(() => {
-    if (!isPageLoaded) {
+    if (!isPageLoaded && document.readyState !== 'complete' && document.readyState !== 'interactive') {
         preloaderTl.pause();
         const checkLoad = setInterval(() => {
-            if (isPageLoaded) {
+            if (isPageLoaded || document.readyState === 'complete' || document.readyState === 'interactive') {
                 clearInterval(checkLoad);
                 preloaderTl.play();
             }
