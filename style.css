@@ -470,8 +470,8 @@ body.nav-open .chromatic-aberration {
 
 /* ===== ABOUT ME SECTION ===== */
 .about-section {
-    min-height: 100vh;
-    padding: 6rem var(--content-margin);
+    min-height: 65vh;
+    padding: 6rem var(--content-margin) 3.9rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6rem;
@@ -899,10 +899,10 @@ body.show-triangle .custom-cursor {
    ========================================= */
 .services-section {
     width: 100%;
-    min-height: 100vh;
+    min-height: 65vh;
     max-width: 100%;
     margin: 0 auto;
-    padding: 6rem clamp(1.5rem, 3.5vw, 4rem);
+    padding: 3.9rem clamp(1.5rem, 3.5vw, 4rem) 6rem;
     position: relative;
     z-index: 1;
     display: flex;
@@ -1955,7 +1955,8 @@ footer {
     }
 
     .about-section {
-        padding: 4rem var(--content-margin);
+        min-height: 65vh;
+        padding: 4rem var(--content-margin) 2.6rem;
         gap: 2.5rem;
     }
 
@@ -1968,7 +1969,8 @@ footer {
     }
 
     .services-section {
-        padding: 4rem var(--content-margin);
+        min-height: 65vh;
+        padding: 2.6rem var(--content-margin) 4rem;
     }
 
     .service-card {
