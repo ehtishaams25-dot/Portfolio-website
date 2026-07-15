@@ -934,11 +934,11 @@ body.show-triangle .custom-cursor {
     background-color: var(--forest-green);
     border: 1px solid rgba(239, 231, 216, 0.15);
     border-radius: 1.25rem;
-    padding: 2.5rem 2rem;
+    padding: 2.25rem 1.75rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    min-height: 360px;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         border-color 0.3s ease,
         box-shadow 0.3s ease;
@@ -979,25 +979,73 @@ body.show-triangle .custom-cursor {
     z-index: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     height: 100%;
+    gap: 4rem;
 }
 
-.service-card .card-icon {
+.service-card .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.service-card .card-number {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 600;
     color: var(--gold);
-    width: 54px;
-    height: 54px;
-    margin-bottom: 2rem;
-    display: block;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.service-card .card-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.service-card .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: rgba(239, 231, 216, 0.25);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.service-card .dot.active {
+    background-color: var(--gold);
+}
+
+.service-card .card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.service-card .card-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.service-card .card-bullet {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: var(--gold);
+    flex-shrink: 0;
 }
 
 .service-card h3 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2.4rem;
-    font-weight: 400;
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
     color: var(--gold);
-    letter-spacing: -0.5px;
+    letter-spacing: -0.01em;
 }
 
 .service-card p {
@@ -1923,10 +1971,19 @@ footer {
 
     .service-card {
         padding: 1.75rem 1.5rem;
+        min-height: 280px;
+    }
+
+    .service-card .card-content {
+        gap: 2.75rem;
+    }
+
+    .service-card .card-number {
+        font-size: 1.6rem;
     }
 
     .service-card h3 {
-        font-size: 1.85rem;
+        font-size: 1.2rem;
     }
 
     .carousel-container {
