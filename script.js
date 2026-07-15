@@ -349,15 +349,15 @@ window.addEventListener('scroll', () => {
 
 // === 6. VIDEO CAROUSEL ===
 const videoFiles = [
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833853/vid_5_dydn6k.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833849/vid_2_lvomec.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833848/vid_8_iz3cpy.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833846/vid_7_gv7zok.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833834/vid_4_t3vqxz.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833837/vid_1_ehju5n.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777833827/vid_3_kjsf8d.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777834715/vid_9_nprjnw.mp4",
-    "https://res.cloudinary.com/devodfvpg/video/upload/q_40,f_auto,c_limit,w_720,h_1280/v1777835015/vid_11_dzvcx8.mp4"
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119398/vid_5_c_b9ffiz.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119397/Vid_2_c_ejziyb.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119400/Vid_8_c_eildo4.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119399/Vid_7_c_rm6tjp.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119396/Vid_4_c_xn5z8h.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119401/Vid_1_c_jp5ufi.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119395/Vid_3_c_s0acu7.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119401/Vid_9_c_yjdnxd.mp4",
+    "https://res.cloudinary.com/devodfvpg/video/upload/v1784119397/Vid_11_c_mmaa3m.mp4"
 ];
 const track = document.getElementById('track');
 const viewport = document.getElementById('viewport');
