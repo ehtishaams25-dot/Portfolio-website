@@ -25,6 +25,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
 
     <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -78,43 +79,34 @@
     <div id="smooth-wrapper">
         <div id="smooth-content">
             <main>
-                <!-- ===== HERO SECTION ===== -->
-                <section class="hero-section" id="hero">
-                    <div id="hero-webgl"></div>
-                    <div id="hurt-flash"></div>
-                    <div class="hero-ui">
-                        <div class="hero-header">
-                            <div class="hero-logo" onclick="location.reload()" style="pointer-events: auto;">
-                                <img src="Refrence%20images/Group%204.png" alt="ES Logo"
-                                    onerror="this.style.display='none'">
+                <!-- ===== HERO SECTION (3D COMMODORE 64 DESK SCENE + WORMHOLE TRANSITION) ===== -->
+                <section class="desk3d-scroll-scene" id="hero">
+                    <div class="desk3d-scroll-scene__pinned" id="heroPinned">
+                        <!-- Cinematic Background Vignette -->
+                        <div class="desk3d-scroll-scene__vignette"></div>
+                        
+                        <!-- Top System HUD Bar -->
+                        <div class="desk3d-scroll-scene__top-bar">
+                            <div class="desk3d-scroll-scene__sys-tag">
+                                <span class="desk3d-scroll-scene__sys-dot"></span>
+                                <span>COMMODORE 64 WORKSTATION</span>
                             </div>
-                            <div class="hero-hud">
-                                <div class="score-box" id="scoreBox">
-                                    Score <span class="score-number" id="scoreNum">0</span>
-                                </div>
-                                <div class="lives-box" id="livesBox">
-                                    Lives: <span id="livesContainer">❤️❤️❤️</span>
-                                </div>
+                            <div class="desk3d-scroll-scene__progress-pill" id="scrollProgressPill">
+                                SCROLL TO EXPLORE
                             </div>
                         </div>
 
-                        <div class="hero-center">
-                            <h1 class="hero-title" id="center-name">
-                                <span class="name-line name-top">MOHAMMED</span>
-                                <span class="name-line name-middle">EHTISHAAM</span>
-                                <span class="name-line name-bottom">SHAIKH</span>
-                            </h1>
-                        </div>
+                        <!-- 3D WebGL Workstation Scene Canvas Wrapper -->
+                        <div class="desk3d-scroll-scene__canvas-wrapper" id="hero-webgl"></div>
 
-                        <div class="hero-spacer">
-                            <div id="mobileGameBanner" class="mobile-game-banner">
-                                <span class="mobile-game-banner-text" id="mobileGameBannerText">DOUBLE TAP TO EXIT GAME • EXPLORE WEBSITE</span>
+                        <!-- Cinematic Wormhole Video Transition Overlay -->
+                        <div class="wormhole-transition" id="wormholeTransition">
+                            <div class="wormhole-transition__start-light"></div>
+                            <div class="wormhole-transition__video-wrapper">
+                                <video id="wormholeVideo" class="wormhole-transition__video" src="Videos/timeline-wormhole.mp4" loop muted playsinline></video>
                             </div>
+                            <div class="wormhole-transition__end-light" id="wormholeEndLight"></div>
                         </div>
-                    </div>
-
-                    <div id="level-up-toast" class="level-up-toast">
-                        +1 Level <br><span class="speed-up">10% Speed Up</span>
                     </div>
                 </section>
 
@@ -584,7 +576,7 @@
         <span class="cursor-text">view full video</span>
     </div>
 
-    <script src="justhero.js"></script>
+    <script src="intro3d.js"></script>
     <script src="script.js?v=6"></script>
 </body>
 </html>
